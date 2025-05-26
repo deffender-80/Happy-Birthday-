@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Birthday Checker</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+    background: #f0f8ff;
+  }
+  input, button {
+    padding: 10px;
+    margin: 10px;
+    font-size: 16px;
+  }
+  #celebration {
+    margin-top: 30px;
+    display: none;
+  }
+  #celebration img {
+    width: 150px;
+    margin: 10px;
+  }
+  #happyMsg {
+    font-size: 32px;
+    color: #d6336c;
+    font-weight: bold;
+    margin: 20px 0;
+    animation: bounce 1s infinite alternate;
+  }
+  @keyframes bounce {
+    0% { transform: translateY(0);}
+    100% { transform: translateY(-20px);}
+  }
+  #nextBtn {
+    padding: 10px 20px;
+    font-size: 18px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  #nextBtn:hover {
+    background-color: #0056b3;
+  }
+</style>
+</head>
+<body>
+
+<h1>Check Your Birthday!</h1>
+
+<div id="formDiv">
+  <input type="text" id="name" placeholder="Enter Your Name" required />
+  <br />
+  <input type="date" id="dob" required />
+  <br />
+  <button onclick="checkBirthday()">Check</button>
+</div>
+
+<div id="result" style="margin-top: 20px; font-size: 20px;"></div>
+
+<div id="nextDiv" style="margin-top: 20px; display: none;">
+  <button id="nextBtn" onclick="showCelebration()">Next</button>
+</div>
+
+<div id="celebration">
+  <div id="happyMsg">Happy Birthday to You, <span id="userName"></span>!</div>
+  <img src="https://i.postimg.cc/R0cGZq5c/balloons.png" alt="Balloons" />
+  <img src="https://i.postimg.cc/pX0Kz8tX/candles.png" alt="Candles" />
+  <img src="https://i.postimg.cc/2y24qyt0/cake.png" alt="Cake" />
+</div>
+
+<script>
+function checkBirthday() {
+  const name = document.getElementById("name").value.trim();
+  const dobInput = document.getElementById("dob").value;
+
+  if (!name) {
+    alert("Please enter your name.");
+    return;
+  }
+  if (!dobInput) {
+    alert("Please enter your date of birth.");
+    return;
+  }
+
+  const dob = new Date(dobInput);
+  const today = new Date();
+
+  const dobMonth = dob.getMonth();
+  const dobDate = dob.getDate();
+
+  const todayMonth = today.getMonth();
+  const todayDate = today.getDate();
+
+  const resultDiv = document.getElementById("result");
+  const nextDiv = document.getElementById("nextDiv");
+  const celebrationDiv = document.getElementById("celebration");
+  celebrationDiv.style.display = "none";
+  nextDiv.style.display = "none";
+
+  if (dobMonth === todayMonth && dobDate === todayDate) {
+    resultDiv.innerHTML = `<b>Happy Birthday to you, ${name}!</b>`;
+    nextDiv.style.display = "block";
+    document.getElementById("userName").textContent = name;
+  } else {
+    // Calculate days remaining to birthday
+    let nextBirthday = new Date(today.getFullYear(), dobMonth, dobDate);
+    if (nextBirthday < today) {
+      // birthday already passed this year, take next year
+      nextBirthday.setFullYear(nextBirthday.getFullYear() + 1);
+    }
+    const diffTime = nextBirthday - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    resultDiv.innerHTML = `Hello <b>${name}</b>, your birthday is in <b>${diffDays} day(s)</b>.`;
+  }
+}
+
+function showCelebration() {
+  document.getElementById("celebration").style.display = "block";
+  document.getElementById("nextDiv").style.display = "none";
+  document.getElementById("result").style.display = "none";
+  document.getElementById("formDiv").style.display = "none";
+}
+</script>
+
+</body>
+</html>
